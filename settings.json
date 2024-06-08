@@ -1,0 +1,14 @@
+{
+    "database": "",
+    "server": "",
+    "username": "",
+    "password": "",
+    "backup_database": "",
+	"email": {
+		"host":"",
+		"port":25,
+		"address":"",
+		"password":"",
+		"domain":""
+	}
+}
