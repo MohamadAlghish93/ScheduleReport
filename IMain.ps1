@@ -26,12 +26,18 @@ Try {
     $ResNonActive =  Join-Path -Path $ApplicationLocation -ChildPath "\Temps\MOJ-inactive-users_$DateYYYYMM.csv" 
     $ResActive =  Join-Path -Path $ApplicationLocation -ChildPath "\Temps\MOJ-active-users_$DateYYYYMM.csv"    
     ## Convert to CSV
-    $ResultNonActive | Select-Object FLDUSERNAME, FullName, fldEmail | Export-Csv -Path $resNonActive
-    $ResultActive | Select-Object FLDUSERNAME, FullName, fldEmail | Export-Csv -Path $ResActive
+    $ResultNonActive | Select-Object FLDUSERNAME, FullName, fldEmail | Export-Csv -Encoding UTF8 -Path $resNonActive
+    $ResultActive | Select-Object FLDUSERNAME, FullName, fldEmail | Export-Csv -Encoding UTF8 -Path $ResActive
 
+    ## Zip File
+    $ResNonActiveZip = Join-Path -Path $ApplicationLocation -ChildPath "\Temps\MOJ-inactive-users_$DateYYYYMM.zip"
+    Compress-Archive -Path $ResNonActive -Update -DestinationPath $ResNonActiveZip
+    $ResActiveZip = Join-Path -Path $ApplicationLocation -ChildPath "\Temps\MOJ-active-users_$DateYYYYMM.zip"
+    Compress-Archive -Path $ResActive -Update -DestinationPath $ResActiveZip
+    
     ## Send Email
-    Send-Email -emailTo "" -attachmentpath  $ResNonActive -username $Setting.email.address -password $Setting.email.password -bodyEmail "" -subject "" -emailFrom $Setting.email.address -emailHost $Setting.email.host -port $Setting.email.port -domain $Setting.email.domain
-    Send-Email -emailTo "" -attachmentpath  $ResNonActive -username $Setting.email.address -password $Setting.email.password -bodyEmail "" -subject "" -emailFrom $Setting.email.address -emailHost $Setting.email.host -port $Setting.email.port -domain $Setting.email.domain
+    Send-Email -emailTo $Setting.email.forwardTo -attachmentpath  $ResNonActiveZip -username $Setting.email.address -password $Setting.email.password -bodyEmail "" -subject "" -emailFrom $Setting.email.address -emailHost $Setting.email.host -port $Setting.email.port -domain $Setting.email.domain
+    Send-Email -emailTo $Setting.email.forwardTo -attachmentpath  $ResActiveZip -username $Setting.email.address -password $Setting.email.password -bodyEmail "" -subject "" -emailFrom $Setting.email.address -emailHost $Setting.email.host -port $Setting.email.port -domain $Setting.email.domain
 
 }
 Catch {
