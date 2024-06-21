@@ -9,6 +9,7 @@
 		"port":25,
 		"address":"",
 		"password":"",
-		"domain":""
+		"domain":"",
+		"forwardTo": ""
 	}
 }
